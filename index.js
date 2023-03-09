@@ -3,6 +3,7 @@ require("dotenv").config()
 const express = require("express")
 const axios = require("axios")
 const cors = require("cors")
+const history = require('connect-history-api-fallback');
 
 const app = express()
 
@@ -10,6 +11,8 @@ const app = express()
 app.use(cors())
 // Allow express to parse JSON
 app.use(express.json())
+// Allow to serve client side routes
+app.use(history())
 // Allow express to serve static files from the dist folder
 app.use(express.static("dist"))
 
@@ -49,7 +52,7 @@ app.post("/transaction/initialize", async (req, res) => {
     const params = {
         email: "customer@email.com",
         amount: (food.amount * quantity * 100).toString(),
-        // callback_url: "http://localhost:3001/verification",
+        callback_url: "http://localhost:3001/verification",
     }
     try {
         const response = await axios({
