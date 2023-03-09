@@ -49,7 +49,7 @@ app.post("/transaction/initialize", async (req, res) => {
     const params = {
         email: "customer@email.com",
         amount: (food.amount * quantity * 100).toString(),
-        callback_url: "http://localhost:3001/verification",
+        // callback_url: "http://localhost:3001/verification",
     }
     try {
         const response = await axios({
