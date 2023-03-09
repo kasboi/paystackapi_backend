@@ -52,7 +52,6 @@ app.post("/transaction/initialize", async (req, res) => {
     const params = {
         email: "customer@email.com",
         amount: (food.amount * quantity * 100).toString(),
-        callback_url: "http://localhost:3001/verification",
     }
     try {
         const response = await axios({
@@ -92,7 +91,7 @@ app.get("/transaction/verify", async (req, res) => {
     }
 })
 
-app.use((req, res) => {
+app.use((_req, res) => {
     res.status(404).send({ error: "Cannot find the requested resource" })
 })
 
