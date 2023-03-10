@@ -16,6 +16,7 @@ app.use(history())
 // Allow express to serve static files from the dist folder
 app.use(express.static("dist"))
 
+// Middleware to log all requests
 const reqLogger = (req, res, next) => {
     console.log("Method:", req.method)
     console.log("Path:  ", req.path)
@@ -25,6 +26,7 @@ const reqLogger = (req, res, next) => {
     next()
 }
 
+// Dummy data
 const products = [
     {
         id: 1,
@@ -40,12 +42,15 @@ const products = [
     },
 ]
 
+// Log all requests
 app.use(reqLogger)
 
+// Home route
 app.get("/", (req, res) => {
     res.send("Implementing paystack api")
 })
 
+// Initialize a transaction
 app.post("/transaction/initialize", async (req, res) => {
     const { id, quantity } = req.query
     const food = products.find((item) => item.id == id)
@@ -71,6 +76,7 @@ app.post("/transaction/initialize", async (req, res) => {
     }
 })
 
+// Verify a transaction
 app.get("/transaction/verify", async (req, res) => {
     const { reference } = req.query
     try {
@@ -127,10 +133,12 @@ app.get("/transaction/customers", async (req, res) => {
 })
 
 app.use((_req, res) => {
+    // If the request reaches this point, it means that no other middleware has responded to the request.
     res.status(404).send({ error: "Cannot find the requested resource" })
 })
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
+    
     console.log(`Listening on port ${PORT}`)
 })

@@ -1,2 +1,7 @@
 /node_modules
-*.env
+/*.env
+/.idea
+/.vscode
+/.vscode-test
+/coverage
+/docs
