@@ -5,3 +5,16 @@ POST http://localhost:3001/transaction/initialize?id=2&quantity=3
 
 ###
 GET http://localhost:3001/transaction/verify?reference=zaxarnnv4z
+
+###
+POST http://localhost:3001/transaction/create-customer HTTP/1.1
+content-type: application/json
+
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@doe.com"
+}
+
+###
+GET http://localhost:3001/transaction/customers

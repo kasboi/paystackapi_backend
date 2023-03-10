@@ -3,7 +3,7 @@ require("dotenv").config()
 const express = require("express")
 const axios = require("axios")
 const cors = require("cors")
-const history = require('connect-history-api-fallback');
+const history = require("connect-history-api-fallback")
 
 const app = express()
 
@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 
 app.post("/transaction/initialize", async (req, res) => {
     const { id, quantity } = req.query
-    const food = products.find(item => item.id == id)
+    const food = products.find((item) => item.id == id)
     const params = {
         email: "customer@email.com",
         amount: (food.amount * quantity * 100).toString(),
@@ -58,8 +58,7 @@ app.post("/transaction/initialize", async (req, res) => {
             method: "POST",
             url: "https://api.paystack.co/transaction/initialize",
             headers: {
-                Authorization:
-                    "Bearer sk_test_6966faa59e3211a668ba7bbc167ea18bcc4fd906",
+                Authorization: process.env.AUTH,
                 "Content-Type": "application/json",
             },
             data: params,
@@ -79,14 +78,50 @@ app.get("/transaction/verify", async (req, res) => {
             `https://api.paystack.co/transaction/verify/${reference}`,
             {
                 headers: {
-                    Authorization:
-                        "Bearer sk_test_6966faa59e3211a668ba7bbc167ea18bcc4fd906",
+                    Authorization: process.env.AUTH,
                 },
             }
         )
         res.json(response.data)
     } catch (error) {
         console.error(error)
+        res.status(error.response.status).send(error.message)
+    }
+})
+
+app.post("/transaction/create-customer", async (req, res) => {
+    const { first_name, last_name, email } = req.body
+    const params = {
+        first_name,
+        last_name,
+        email,
+    }
+    try {
+        const response = await axios({
+            method: "POST",
+            url: "https://api.paystack.co/customer",
+            headers: {
+                Authorization: process.env.AUTH,
+                "Content-Type": "application/json",
+            },
+            data: params,
+        })
+        res.status(200).send(response.data)
+    } catch (error) {
+        console.error(error)
+        res.status(error.response.status).send(error.message)
+    }
+})
+
+app.get("/transaction/customers", async (req, res) => {
+    try {
+        const response = await axios.get("https://api.paystack.co/customer", {
+            headers: {
+                Authorization: process.env.AUTH,
+            },
+        })
+        res.status(200).send(response.data)
+    } catch (error) {
         res.status(error.response.status).send(error.message)
     }
 })
